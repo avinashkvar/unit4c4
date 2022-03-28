@@ -41,7 +41,11 @@ router.patch('/:id', authenticate, async (req, res) => {
 	try {
 		req.body.userId = req.user._id;
 
-		let todo = await Todo.findByIdAndUpdate({ userId: req.params.id }).lean().exec();
+		let todo = await Todo.findByIdAndUpdate(req.body, req.params.id, {
+			new: true,
+		})
+			.lean()
+			.exec();
 
 		return res.status(200).send(todo);
 	} catch (error) {
@@ -53,7 +57,9 @@ router.delete('/:id', authenticate, async (req, res) => {
 	try {
 		req.body.userId = req.user._id;
 
-		let todo = await Todo.findByIdAndDelete({ userId: req.params.id }).lean().exec();
+		let todo = await Todo.findByIdAndDelete({ userId: req.params.id })
+			.lean()
+			.exec();
 
 		return res.status(200).send(todo);
 	} catch (error) {
